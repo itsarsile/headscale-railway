@@ -1,0 +1,20 @@
+services:
+  headscale:
+    image: docker.io/headscale/headscale:0.28.0
+    restart: unless-stopped
+    container_name: headscale
+    read_only: true
+    tmpfs:
+      - /var/run/headscale
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:9090:9090"
+    volumes:
+      # Please set <HEADSCALE_PATH> to the absolute path
+      # of the previously created headscale directory.
+      - ./headscale_data:/var/lib/headscale
+    command: serve -c /var/lib/headscale/config.yml
+    healthcheck:
+        test: ["CMD", "headscale", "health"]
+volumes:
+  headscale_data:

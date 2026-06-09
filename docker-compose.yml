@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   headscale:
-    build: .
+    build:
+      context: ./headscale
+      dockerfile: Dockerfile
     restart: unless-stopped
     container_name: headscale
     tmpfs:
@@ -17,7 +19,9 @@ services:
       test: ["CMD", "headscale", "health"]
 
   headplane:
-    image: ghcr.io/tale/headplane:latest
+    build:
+      context: ./headplane
+      dockerfile: Dockerfile
     restart: unless-stopped
     container_name: headplane
     ports:

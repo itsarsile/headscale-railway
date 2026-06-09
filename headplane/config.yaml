@@ -1,0 +1,36 @@
+# Headplane Configuration
+# This file is built into your Railway container automatically.
+# Many of these settings can also be overridden by Environment Variables
+# in the Railway Dashboard (e.g. HEADPLANE_SERVER__PORT=3000)
+
+server:
+  port: 3000
+  host: "0.0.0.0"
+
+# Configuration for how Headplane communicates with Headscale
+headscale:
+  # This is the internal Railway network URL for Headscale
+  url: "http://headscale:8080"
+  
+  # The API key must be generated from the Headscale CLI and
+  # added to the Railway variables as HEADPLANE_HEADSCALE__API_KEY
+  # api_key: ""
+  
+  # Since this is running on Railway without a shared filesystem, 
+  # config reading is disabled. Headplane will interact strictly via API.
+  # config_path: ""
+
+integration:
+  # Docker socket integration is disabled as Railway does not support
+  # sharing the Docker socket or sharing volumes between containers.
+  docker:
+    enabled: false
+
+# OIDC Configuration for Single Sign-On (SSO)
+# You can uncomment and fill these out if you use an external provider
+# oidc:
+#   enabled: false
+#   issuer: "https://accounts.google.com"
+#   client_id: "your-client-id"
+#   client_secret: "your-client-secret"
+#   scope: "openid email profile"

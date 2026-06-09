@@ -16,5 +16,22 @@ services:
     command: serve -c /var/lib/headscale/config.yml
     healthcheck:
         test: ["CMD", "headscale", "health"]
+  headplane:
+    image: ghcr.io/tale/headplane:latest
+    restart: unless-stopped
+    container_name: headplane
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./headplane_data:/var/lib/headplane
+      # Mount headscale config and data so headplane can read them directly
+      - ./headscale_data/config.yml:/etc/headscale/config.yaml:ro
+      - ./headscale_data/db.sqlite:/var/lib/headscale/db.sqlite:rw
+      # Optional: connect docker socket to allow headplane to manage API keys automatically
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - COOKIE_SECRET=change_me_to_a_random_string
+
 volumes:
   headscale_data:
+  headplane_data:

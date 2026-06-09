@@ -1,4 +1,0 @@
-FROM ghcr.io/tale/headplane:latest
-
-# Expose the default Headplane port
-EXPOSE 3000

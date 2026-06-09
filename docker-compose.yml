@@ -1,21 +1,21 @@
+version: '3.8'
+
 services:
   headscale:
-    image: docker.io/headscale/headscale:0.28.0
+    build: .
     restart: unless-stopped
     container_name: headscale
-    read_only: true
     tmpfs:
       - /var/run/headscale
     ports:
-      - "127.0.0.1:8080:8080"
-      - "127.0.0.1:9090:9090"
+      - "8080:8080"
+      - "9090:9090"
     volumes:
-      # Please set <HEADSCALE_PATH> to the absolute path
-      # of the previously created headscale directory.
-      - ./headscale_data:/var/lib/headscale
-    command: serve -c /var/lib/headscale/config.yml
+      - headscale_data:/var/lib/headscale
+    command: serve -c /etc/headscale/config.yaml
     healthcheck:
-        test: ["CMD", "headscale", "health"]
+      test: ["CMD", "headscale", "health"]
+
   headplane:
     image: ghcr.io/tale/headplane:latest
     restart: unless-stopped
@@ -23,14 +23,13 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./headplane_data:/var/lib/headplane
-      # Mount headscale config and data so headplane can read them directly
-      - ./headscale_data/config.yml:/etc/headscale/config.yaml:ro
-      - ./headscale_data/db.sqlite:/var/lib/headscale/db.sqlite:rw
-      # Optional: connect docker socket to allow headplane to manage API keys automatically
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - headplane_data:/var/lib/headplane
     environment:
       - COOKIE_SECRET=change_me_to_a_random_string
+      - HEADPLANE_LOAD_ENV_OVERRIDES=true
+      - HEADPLANE_HEADSCALE__URL=http://headscale:8080
+      # You MUST generate an API key on Headscale and replace this value in the Railway Dashboard:
+      - HEADPLANE_HEADSCALE__API_KEY=replace_me_in_railway_dashboard
 
 volumes:
   headscale_data:

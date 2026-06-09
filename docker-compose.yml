@@ -25,11 +25,11 @@ services:
     volumes:
       - headplane_data:/var/lib/headplane
     environment:
-      - COOKIE_SECRET=change_me_to_a_random_string
+      - COOKIE_SECRET=${COOKIE_SECRET}
       - HEADPLANE_LOAD_ENV_OVERRIDES=true
       - HEADPLANE_HEADSCALE__URL=http://headscale:8080
-      # You MUST generate an API key on Headscale and replace this value in the Railway Dashboard:
-      - HEADPLANE_HEADSCALE__API_KEY=replace_me_in_railway_dashboard
+      # You MUST generate an API key on Headscale and update this value in the Railway Dashboard:
+      - HEADPLANE_HEADSCALE__API_KEY=${HEADPLANE_API_KEY:-replace_me_after_deployment}
 
 volumes:
   headscale_data:
